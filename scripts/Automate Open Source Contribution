@@ -1,0 +1,27 @@
+import os
+import git
+
+# Step 1: Clone the repository
+REPO_URL = "https://github.com/your-username/target-open-source-repo.git"
+CLONE_DIR = "./open_source_contribution"
+if not os.path.exists(CLONE_DIR):
+    repo = git.Repo.clone_from(REPO_URL, CLONE_DIR)
+else:
+    repo = git.Repo(CLONE_DIR)
+
+# Step 2: Modify a file (e.g., README.md)
+readme_path = os.path.join(CLONE_DIR, "README.md")
+with open(readme_path, "a") as readme:
+    readme.write("\nContributed via automation script.")
+
+# Step 3: Stage, commit the changes
+repo.git.add(update=True)
+repo.index.commit("Automated: Updated README.md with contribution note.")
+
+# Step 4: Push changes (You need the right permissions)
+origin = repo.remote(name='origin')
+try:
+    origin.push()
+    print("Changes pushed to remote repository.")
+except Exception as e:
+    print("Push failed. You may not have permission or SSH keys set up.", e)
